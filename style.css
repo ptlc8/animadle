@@ -1,0 +1,26 @@
+:root {
+    font-family: Arial, sans-serif;
+}
+
+.icon {
+    display: table-cell;
+    width: 6em;
+    height: 6em;
+    border-radius: .4em;
+    text-align: center;
+    background-size: cover;
+    vertical-align: bottom;
+}
+
+.icon.correct {
+    background-color: #4CAF50;
+    color: white;
+}
+.icon.incorrect {
+    background-color: #F44336;
+    color: white;
+}
+.icon.almost {
+    background-color: #FFC107;
+    color: white;
+}
