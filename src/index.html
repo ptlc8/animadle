@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html data-app="{animals: [], search: '', guesses: [], target: null}">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Animadle</title>
+        <link rel="stylesheet" href="style.css" />
+        <script src="https://cdn.jsdelivr.net/gh/ptlc8/anchovy@0.3.3/src/anchovy.js"></script>
+        <script src="script.js"></script>
+        <script async>
+            (async () => {
+                app.data.animals = await Animaux.getAll();
+                app.data.target = app.data.animals[parseInt(app.data.animals.length * Math.random())];
+            })();
+            function searchAnimals(search) {
+                if (!search)
+                    return [];
+                return app.data.animals
+                    .filter(animal => animal.name.match(new RegExp(search, 'i')))
+                    .sort((a, b) => a.name.search(new RegExp(search, 'i')) - b.name.search(new RegExp(search, 'i')))
+                    .slice(0, 8);
+            }
+        </script>
+    </head>
+
+    <body>
+        <header>
+            <h1>🐾 Animadle</h1>
+        </header>
+
+        <section>
+            <div class="search">
+                <input type="text" placeholder="Rechercher un animal..." data-model="search" />
+                <div data-foreach-result="searchAnimals(search)" data-update="search" class="results">
+                    <div tabindex="0" data-on-click="guesses.push(result), search = ''">
+                        <img data-bind-src="result.image" alt="" />
+                        <span data-bind="result.name"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Animal</th>
+                        <th>Région</th>
+                        <th>Alimentation</th>
+                        <th>Biologie</th>
+                        <th>Habitat</th>
+                        <th>Mode de vie</th>
+                        <th>Domestication</th>
+                    </tr>
+                </thead>
+                <tbody data-foreach-animal="guesses" data-update="guesses.length">
+                    <tr>
+                        <td>
+                            <span data-bind="animal.name" data-style-background-image="`url(${animal.image})`" data-bind-class="`icon dark ${target.id === animal.id ? 'correct' : ''}`"></span>
+                        </td>
+                        <td data-foreach-region="animal.region ?? []">
+                            <span data-bind="region" data-bind-class="`icon ${target.region?.includes(region) ? 'correct' : 'incorrect'}`" data-style-background-image="`url(assets/${region}.jpg)`"></span>
+                        </td>
+                        <td data-foreach-alimentation="animal.alimentation ?? []">
+                            <span data-bind="alimentation" data-bind-class="`icon ${target.alimentation?.includes(alimentation) ? 'correct' : 'incorrect'}`" data-style-background-image="`url(assets/${alimentation}.jpg)`"></span>
+                        </td>
+                        <td>
+                            <span data-bind="animal.biologie" data-bind-class="`icon ${target.biologie==animal.biologie ? 'correct' : 'incorrect'}`" data-style-background-image="`url(assets/${animal.biologie}.jpg)`"></span>
+                        </td>
+                        <td>
+                            <span data-bind="animal.habitat" data-bind-class="`icon ${target.habitat==animal.habitat ? 'correct' : 'incorrect'}`" data-style-background-image="`url(assets/${animal.habitat}.jpg)`"></span>
+                        </td>
+                        <td data-foreach-mode="animal.modedevie ?? []">
+                            <span data-bind="mode" data-bind-class="`icon dark ${target.modedevie?.includes(mode) ? 'correct' : 'incorrect'}`" data-style-background-image="`url(assets/${mode}.jpg)`"></span>
+                        </td>
+                        <td>
+                            <span data-bind="animal.domestication ? 'Oui' : 'Non'" data-bind-class="`icon ${target.domestication === animal.domestication ? 'correct' : 'incorrect'}`" data-style-background-image="`url(assets/${animal.domestication ? 'domestic' : 'wild'}.jpg)`"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <footer>
+            © <span data-bind="new Date().getFullYear()"></span> Fait avec 💙 par Ambi
+        </footer>
+    </body>
+
+</html>
