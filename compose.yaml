@@ -1,0 +1,13 @@
+services:
+  server:
+    build: .
+    ports:
+      - 80
+    restart: always
+    labels:
+      - webproxy.subdomain=${WEBPROXY_SUBDOMAIN-animadle}
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /home/static
